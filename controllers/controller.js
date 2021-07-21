@@ -1,41 +1,81 @@
+//  Requerimentos de Express
 const { response } = require('express')
 
+//  Encriptar Contraseña usamos paquete Bcrypt
+const bcryptjs = require('bcryptjs')
 
-const get = (req, res = response) => {
+//  Modelo de Esquema Mongose
+const User = require('../models/usuarioschema')
 
-    //  Parsear Parametros y Recibirlos
-    const query = req.query
+
+
+const get = async(req, res = response) => {
+
+    //  Argumentos Opcionales del Query
+    const {limit = 2, since = 0} = req.query
+
+    //  Devuelve un query
+    const [Total, Usuarios] = await Promise.all([
+        User.countDocuments({estado : true}),
+        User.find({estado : true})
+            .skip(Number(since))
+            .limit(Number(limit))
+    ])
 
     res.json({
+
         mensage : 'Peticion GET USANDO CONTROLADOR',
         message : 'Request GET USING CONTROLLER',
-        query
+        Total,
+        Usuarios
+
     })
 }
 
-const post = (req, res = response) => {
+const post = async(req, res = response) => {
 
     //  Parametros sumistrados en el BODY
-    const {name = 'No Name', age} = req.body
+    const {name, email, password , rol} = req.body;
+
+    //  Peticiones del Body se introduce al Modelo
+    const user = new User({name, email, password , rol});
+
+    //  Encriptar Contraseña Hash
+    const salt = bcryptjs.genSaltSync()
+    user.password = bcryptjs.hashSync(password, salt)
+
+    //  Salvar en Base de datos
+    await user.save();
 
     res.json({
-        mensage : 'Peticion POST USANDO CONTROLADOR',
-        message : 'Request POST USING CONTROLLER',
-        name,
-        age
+        message : 'Request POST USING CONTROLLER FOR USER CREATE STATUS 200',
+        user
     })
 
 }
 
-const put = (req, res = response) => {
+const put = async(req, res = response) => {
 
     //  Recibir Parametros
     const {id} = req.params;
 
+    //  Parametros que excluimos y cuales si apuntamos
+    const {_id , password , google , email , ... resto} = req.body
+
+    // TODO: Validar Contra Base de Datos
+    if (password){
+        //  Encriptar Contraseña Hash
+        const salt = bcryptjs.genSaltSync()
+        resto.password = bcryptjs.hashSync(password, salt)
+    }
+
+    //  Busca el ID y con los datos actualizalos
+    const user = await User.findByIdAndUpdate(id , resto)
+
     res.json({
         mensage : 'Peticion PUT',
         message : 'Request PUT USING CONTROLLER',
-        id
+        user
     })
 }
 
@@ -46,10 +86,15 @@ const patch = (req, res = response) => {
     })
 }
 
-const delet = (req, res = response) => {
+const delet = async(req, res = response) => {
+
+    const {id} = req.params
+    const user = await User.findByIdAndUpdate(id, {estado : false})
+
     res.json({
         mensage : 'Peticion DELETE',
-        message : 'Request DELETE USING CONTROLLER'
+        message : 'Request DELETE USING CONTROLLER',
+        user
     })
 }
 
