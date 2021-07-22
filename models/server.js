@@ -15,6 +15,7 @@ class Server{
 
         //  Path de Rutas
         this.RoutesPath = '/api'
+        this.AuthPath = '/api/auth'
 
         //  Conexion a Base de Datos
         this.database();
@@ -52,7 +53,9 @@ class Server{
     routes(){
         
         //  Cargamos todas las rutas
-        this.app.use(this.RoutesPath, require('../routes/route'))
+        this.app.use(this.AuthPath, require('../routes/routeauth'))
+        this.app.use(this.RoutesPath, require('../routes/route'));
+        
 
     }
 

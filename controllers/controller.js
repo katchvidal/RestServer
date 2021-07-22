@@ -89,7 +89,11 @@ const patch = (req, res = response) => {
 const delet = async(req, res = response) => {
 
     const {id} = req.params
+
     const user = await User.findByIdAndUpdate(id, {estado : false})
+
+    //  Usuario Auntenticado
+    const userauth = req.user
 
     res.json({
         mensage : 'Peticion DELETE',

@@ -7,6 +7,10 @@ const { validate } = require("../middlewares/validate");
 //  MiddleWare Custom / Helpers
 const { validaterol, AlreadyEmail, MongoUserId } = require("../helpers/databasevalidators");
 
+//  Middleware
+const { validatejwt } = require("../middlewares/validar-jwt");
+const { AdminRole,  AutorizadoRol } = require("../middlewares/validateroles");
+
 //  Funciones del Controlador
 const { get, 
     put, 
@@ -45,6 +49,9 @@ router.post('/',
 
 //  Path, Middleware, Controller
 router.delete('/:id', [
+    validatejwt,
+    //AdminRole,
+    AutorizadoRol('Admin_Rol', 'User_Rol'),
     check('id', 'No Valid ID').isMongoId(),
     check('id').custom(MongoUserId),
     validate
