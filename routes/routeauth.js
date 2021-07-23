@@ -5,7 +5,7 @@ const { check } = require("express-validator");
 
 
 //  Contiene todos los controladores
-const { logincontroller } = require("../controllers/authcontroller");
+const { logincontroller, GoogleSignin } = require("../controllers/authcontroller");
 const { validate } = require("../middlewares/validate");
 
 
@@ -20,6 +20,12 @@ router.post('/login', [
     validate
 ] ,logincontroller)
 
+
+//  Path, MiddleWare, Controller
+router.post('/google', [
+    check('id_token', 'Id Token is Required').not().isEmpty(),
+    validate
+] , GoogleSignin)
 
 
 module.exports = router;
