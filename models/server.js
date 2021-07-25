@@ -16,6 +16,9 @@ class Server{
         //  Path de Rutas
         this.RoutesPath = '/api'
         this.AuthPath = '/api/auth'
+        this.CategoryPath = '/api/categorias'
+        this.ProductoPath = '/api/productos'
+        this.BuscarPath = '/api/buscar'
 
         //  Conexion a Base de Datos
         this.database();
@@ -53,8 +56,11 @@ class Server{
     routes(){
         
         //  Cargamos todas las rutas
-        this.app.use(this.AuthPath, require('../routes/routeauth'))
+        this.app.use(this.AuthPath, require('../routes/routeauth'));
+        this.app.use(this.CategoryPath, require('../routes/routecategory'))
         this.app.use(this.RoutesPath, require('../routes/route'));
+        this.app.use(this.ProductoPath, require('../routes/routhproducto'));
+        this.app.use(this.BuscarPath, require('../routes/routebuscar'));
         
 
     }
