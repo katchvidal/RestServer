@@ -63,6 +63,16 @@ const ProductoExists = async(id) => {
 }
 
 
+const ColeccionesPermitidas = async(coleccion = '', colecciones = []) => {
+
+    const incluidas = colecciones.includes(coleccion)
+    if (!incluidas){
+        throw new Error(`la coleccion: ${coleccion} no es permitida `)
+    }
+
+    return true
+}
+
 
 module.exports= {
 
@@ -70,6 +80,7 @@ module.exports= {
     AlreadyEmail,
     MongoUserId,
     CategoryExists,
-    ProductoExists
+    ProductoExists,
+    ColeccionesPermitidas
 
 }
