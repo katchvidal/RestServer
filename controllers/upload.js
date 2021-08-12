@@ -1,6 +1,6 @@
 const { response } = require("express");
 const { subirarchivo } = require("../helpers/subirarchivo");
-const User = require('../models/usuario')
+const Usuario = require('../models/usuario')
 const Producto = require('../models/producto')
 const path = require('path')
 const fs = require('fs')
@@ -41,10 +41,10 @@ const ActualizarImagen = async(req, res = response) => {
 
   switch (coleccion) {
     case 'usuarios':
-      modelo = await User.findById(id)
+      modelo = await Usuario.findById(id)
       if (!modelo){
         return res.status(400).json({
-          msg :'No existe un usuario con ese id'
+          msg : `No existe un usuario con ese id: ${id}`
         })
       }
 
@@ -56,7 +56,9 @@ const ActualizarImagen = async(req, res = response) => {
       modelo = await Producto.findById(id)
       if (!modelo){
         return res.status(400).json({
-          msg :'No existe un usuario con ese id'
+
+          msg : `no existe un producto con ese id: ${id} `
+
         })
       }
 
@@ -107,9 +109,9 @@ const GetImage = async(req, res = response) => {
 
   let modelo;
 
-  switch (coleccion) {
+  switch ( coleccion ) {
     case 'usuarios':
-      modelo = await User.findById(id)
+      modelo = await Usuario.findById(id)
       if (!modelo){
         return res.status(400).json({
           msg :'No existe un usuario con ese id'
@@ -165,7 +167,7 @@ const ActualizarImagenCloudinary = async(req, res = response) => {
 
   switch (coleccion) {
     case 'usuarios':
-      modelo = await User.findById(id)
+      modelo = await Usuario.findById(id)
       if (!modelo){
         return res.status(400).json({
           msg :'No existe un usuario con ese id'

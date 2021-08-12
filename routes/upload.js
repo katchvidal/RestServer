@@ -15,14 +15,14 @@ const { ValidarArchivoSubir } = require("../middlewares/validarsubirarchivo");
 
 
 //  Funciones del Controlador
-const { CargarArchivos,  GetImage, ActualizarImagenCloudinary } = require("../controllers/uploadcontroller");
+const { CargarArchivos,  GetImage, ActualizarImagenCloudinary } = require("../controllers/upload");
 
 
 
 //  Contiene toda la Funcionalidad de Router
 const router = Router();
 
-                                                            //  Rutas de la API
+//  Rutas de la API
 
 //  Path, MiddleWare, Controller
 router.post('/', [
@@ -32,7 +32,7 @@ router.post('/', [
 router.put('/:coleccion/:id', [
     ValidarArchivoSubir,
     check('id', 'Id debe ser valido').isMongoId(),
-    check('coleccion').custom(c => ColeccionesPermitidas(c, ['usuarios', 'productos'])),
+    check('coleccion').custom(c => ColeccionesPermitidas(c, [ 'usuarios', 'productos' ])),
     validate
 ], ActualizarImagenCloudinary)
 
@@ -40,7 +40,7 @@ router.put('/:coleccion/:id', [
 router.get('/:coleccion/:id' , [
 
     check('id', 'Id debe ser valido').isMongoId(),
-    check('coleccion').custom(c => ColeccionesPermitidas(c, ['usuarios', 'productos'])),
+    check('coleccion').custom(c => ColeccionesPermitidas( c, [ 'usuarios', 'productos' ] ) ),
     validate
 
 ] , GetImage )

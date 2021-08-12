@@ -82,7 +82,8 @@ class server{
         //  Ruta de Busqueda -> Encuentra todo el contenido en un solo Endpoint
         this.app.use(this.BuscarPath, require('../routes/buscar'));
 
-        this.app.use(this.UploadsPath, require('../routes/routeupload'))
+        //  Subida de Archivos -> Ruta para subir Archivos
+        this.app.use(this.UploadsPath, require('../routes/upload'))
         
 
     }
