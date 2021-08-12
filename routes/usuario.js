@@ -16,7 +16,7 @@ const { get,
     put, 
     post, 
     delet, 
-    patch } = require("../controllers/controller");
+    patch } = require('../controllers/usuario');
 
 
 //  Contiene toda la Funcionalidad de Router

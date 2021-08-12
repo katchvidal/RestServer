@@ -1,5 +1,5 @@
 const {response} = require('express')
-const Category = require('../models/categoriasschema')
+const Categoria = require('../models/categoria')
 
 const CategoryController = async(req, res = response) =>{
 
@@ -18,17 +18,16 @@ const GetCategoria = async(req, res= response) => {
 
     //  Devuelve un query
     const [Total, Categorias] = await Promise.all([
-        Category.countDocuments(query),
-        Category.find(query)
-            .populate('user', 'name')
+        Categoria.countDocuments(query),
+        Categoria.find(query)
+            .populate('usuario', 'name')
             .skip(Number(since))
             .limit(Number(limit))
     ])
 
     res.json({
 
-        mensage : 'Peticion GET USANDO CONTROLADOR',
-        message : 'Request GET USING CONTROLLER',
+        mensage : 'Get Categorias',
         Total,
         Categorias
 
@@ -42,10 +41,10 @@ const GetIdCategory = async(req, res = response) => {
     //  Recibir Parametros
     const {id} = req.params;
 
-    const categoria = await Category.findById(id).populate('user', 'name')
+    const categoria = await Categoria.findById(id).populate( 'usuario', 'name' )
 
     res.json({
-
+        mensage : 'Get Categorias por ID',
         categoria
     })
 
@@ -54,29 +53,37 @@ const GetIdCategory = async(req, res = response) => {
 
 const PostCategoria = async(req, res= response) => {
 
-    const { name } = req.body
+    //  Convertir Nombre a Mayuscualas
+    const name = req.body.name.toUpperCase();
+    
+    //  Busque si Existe un Nombre igual
+    const CategoriaDb = await Categoria.findOne({ name} )
 
-    const CategoriaDb = await Category.findOne({ name} )
-
+    //  Si Ya Existe Retorna un Status 400
     if (CategoriaDb){
-        res.status(400).json({
-            msg : `Categoria: ${name} ya existe`
+
+        return res.status(400).json({
+
+            msg : ` La Categoria: ${CategoriaDb.name} ya existe `
+
         })
+
     }
 
     //  Generar la data a guardar
     const data = {
         name,
-        //  El modelo de usuario lo regresamos como user en modelos de usuarios linea 58
-        user : req.user._id
+        //  El modelo de usuario lo regresamos como usuario en modelos de usuarios linea 58
+        usuario : req.usuario._id
     }
 
-    const categoria = await new Category(data)
+    //  Llenar Categoria
+    const categoria = await new Categoria(data)
 
     //  Guardar DB
     await categoria.save()
 
-
+    //  Enviar Respuesta
     res.status(201).json(categoria)
 
 }
@@ -87,17 +94,19 @@ const PutCategory = async(req, res = response) => {
     const {id} = req.params;
 
     //  Parametros que excluimos y cuales si apuntamos
-    const {_id , estado, user , ... data} = req.body
+    const {_id , estado, usuario , ... data} = req.body
 
+    //  Apuntamos a hacer el nombre a Mayusculas
     data.name = data.name.toUpperCase()
 
-    data.user = req.user._id
+    //  Usuario que esta haciendo el UPDATE -> ACTUALIZANDO
+    data.usuario = req.usuario._id
 
     //  Busca el ID y con los datos actualizalos
-    const category = await Category.findByIdAndUpdate(id, data, {new : true})
+    const categoria = await Categoria.findByIdAndUpdate(id, data, {new : true})
 
     res.json({
-        category
+        categoria
     })
 }
 
@@ -106,10 +115,12 @@ const DeleteCategory = async(req, res = response) => {
 
     const {id} = req.params
 
-    const category = await Category.findByIdAndUpdate(id, {estado : false}, {new : true})
+    const categoria = await Categoria.findByIdAndUpdate( id, {estado : false}, {new : true} )
 
     res.status(200).json({
-        category
+
+        categoria
+
     })
 
 }
@@ -117,10 +128,11 @@ const DeleteCategory = async(req, res = response) => {
 
 
 module.exports = {
-    CategoryController,
+
     PostCategoria,
     GetCategoria,
     GetIdCategory,
     PutCategory,
     DeleteCategory
+
 }

@@ -1,11 +1,11 @@
 const {response} = require('express')
-const Usuario = require('../models/usuarioschema')
+const Usuario = require('../models/usuario')
 const bcryptjs = require('bcryptjs')
 const {generarJwt} = require('../helpers/generateJWT')
 const { GoogleVerify } = require('../helpers/googleValidate')
 
 
-const logincontroller = async(req, res = response) =>{
+const Login = async(req, res = response) =>{
 
     const {password , email} = req.body;
 
@@ -15,14 +15,14 @@ const logincontroller = async(req, res = response) =>{
         const usuario = await Usuario.findOne({email})
         if(!usuario){
             return res.status(400).json({
-                msg : ' email or password are incorrect '
+                msg : ' Email or Password Incorrect - Not Register '
             })
         }
 
         //  Verificar si el usuario esta activo
         if(!usuario.estado){
             return res.status(400).json({
-                msg : ' email or password are incorrect '
+                msg : ' Email or Password Incorrect - Not register '
             })
         }
 
@@ -30,12 +30,11 @@ const logincontroller = async(req, res = response) =>{
         const validpass = bcryptjs.compareSync(password, usuario.password)
         if(!validpass){
             return res.status(400).json({
-                msg : ' email or password are incorrect '
+                msg : ' email or password are incorrect - Password Incorrect '
             })
         }
         //  Generar JWT
         const token = await generarJwt(usuario.id)
-
 
         res.json({
             msg : 'Login ok',
@@ -112,6 +111,6 @@ const GoogleSignin = async(req, res = response) =>{
 }
 
 module.exports = {
-    logincontroller,
+    Login,
     GoogleSignin
 }

@@ -4,7 +4,7 @@ const { dbconnection } = require('../database/config');
 const fileUpload = require('express-fileupload')
 
 
-class Server{
+class server{
     
     //  Aqui declaramos las propiedades de la clase
     constructor() {
@@ -16,7 +16,7 @@ class Server{
         this.PORT = process.env.PORT
 
         //  Path de Rutas
-        this.RoutesPath = '/api'
+        this.UsuariosPath = '/api'
         this.AuthPath = '/api/auth'
         this.CategoryPath = '/api/categorias'
         this.ProductoPath = '/api/productos'
@@ -67,11 +67,21 @@ class Server{
     routes(){
         
         //  Cargamos todas las rutas
-        this.app.use(this.AuthPath, require('../routes/routeauth'));
-        this.app.use(this.CategoryPath, require('../routes/routecategory'))
-        this.app.use(this.RoutesPath, require('../routes/route'));
-        this.app.use(this.ProductoPath, require('../routes/routhproducto'));
-        this.app.use(this.BuscarPath, require('../routes/routebuscar'));
+        //Usuario -> Ruta
+        this.app.use(this.UsuariosPath, require('../routes/usuario'));
+
+        //  Autenticar Usuario -> Ruta Login / JSON Web Token
+        this.app.use(this.AuthPath, require('../routes/auth'));
+
+        //  Categorias de Productos -> Ruta de Categorias
+        this.app.use(this.CategoryPath, require('../routes/categoria'))
+
+        //  Productos -> Ruta de Productos
+        this.app.use(this.ProductoPath, require('../routes/productos'));
+
+        //  Ruta de Busqueda -> Encuentra todo el contenido en un solo Endpoint
+        this.app.use(this.BuscarPath, require('../routes/buscar'));
+
         this.app.use(this.UploadsPath, require('../routes/routeupload'))
         
 
@@ -88,4 +98,4 @@ class Server{
 
 }
 
-module.exports = Server;
+module.exports = server;

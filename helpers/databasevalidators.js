@@ -1,15 +1,15 @@
 //  Modelo de Rol para Validar
-const Rol = require('../models/rolschema')
-const User = require('../models/usuarioschema')
-const Category = require('../models/categoriasschema')
-const Producto = require('../models/productoschema')
+const Rol = require('../models/role')
+const Usuario = require('../models/usuario')
+const Categoria = require('../models/categoria')
+const Producto = require('../models/producto')
 
 //  Funcionalidad de Validacion de Rol contra Base de datos
 const validaterol =  async(rol = '') =>{
 
     const existsRol = await Rol.findOne({rol})
     if (!existsRol){
-        throw new Error(`The Rol: ${rol} isnt valid`)
+        throw new Error(`The Rol: ${rol} not valid`)
     }
         
 }
@@ -17,7 +17,7 @@ const validaterol =  async(rol = '') =>{
 //  Validacion de que Ya existe ese Email
 const AlreadyEmail =  async(email = '') =>{
     
-    const exists = await User.findOne({email})
+    const exists = await Usuario.findOne({email})
     if (exists){
         throw new Error(`The Email: ${email} is already registered`)
     }
@@ -29,7 +29,7 @@ const AlreadyEmail =  async(email = '') =>{
 const MongoUserId = async(id) => {
 
     //  Buscalo por id
-    const exists = await User.findById(id)
+    const exists = await Usuario.findById(id)
 
     //  Si no Existe Lanza un error
     if (!exists){
@@ -37,19 +37,20 @@ const MongoUserId = async(id) => {
     }
 }
 
+//  Validacion de Existe Categoria Por ID
 const CategoryExists = async(id) =>{
 
     //  Buscalo por id
-    const existsCategory = await Category.findById(id)
+    const existsCategory = await Categoria.findById(id)
 
     //  Si no Existe Lanza un error
     if (!existsCategory){
-        throw new Error(`The id: ${id} Not Exists `)
+        throw new Error(`El id: ${id} No Existe `)
     }
-
 
 }
 
+//  Validacion de Productos por ID
 const ProductoExists = async(id) => {
 
     //  Buscalo por id
@@ -57,12 +58,12 @@ const ProductoExists = async(id) => {
 
     //  Si no Existe Lanza un error
     if (!ExistsProducto){
-        throw new Error(`The id: ${id} Not Exists `)
+        throw new Error(`El id: ${id} No Existe `)
     }
 
 }
 
-
+//  Colecciones Permitidas
 const ColeccionesPermitidas = async(coleccion = '', colecciones = []) => {
 
     const incluidas = colecciones.includes(coleccion)

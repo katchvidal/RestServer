@@ -50,16 +50,12 @@ const UserSchema = Schema({
 
 //  No devolver nunca los siguientes objetos de la base de datos
 UserSchema.methods.toJSON = function(){
-    const {__v, password, _id,  ... user} = this.toObject()
+    const {__v, password, _id,  ... usuario} = this.toObject()
 
-    //  Modificar el nombre de un objeto por otro sin modificar la base de datos
-    user.uid = _id
+    //  Modificar el nombre de un objeto por otro sin modificar la base de datos -> _id modificar por USER ID (uid)
+    usuario.uid = _id
     
-    return user
+    return usuario
 }
-
-
-
-
 
 module.exports = model('Usuario', UserSchema);

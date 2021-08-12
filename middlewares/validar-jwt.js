@@ -1,6 +1,6 @@
 const { response, request } = require('express')
 const jwt = require('jsonwebtoken')
-const User = require('../models/usuarioschema')
+const Usuario = require('../models/usuario')
 
 const validatejwt = async(req, res = response, next) => {
 
@@ -10,7 +10,7 @@ const validatejwt = async(req, res = response, next) => {
     //  Si no hay token no hay autorizacion
     if(!token){
         return res.status(401).json({
-            msg : 'No token, No authorizen'
+            msg : 'No se Encontro Token Valido - No tiene Autorizacion'
         })
     }
 
@@ -21,17 +21,17 @@ const validatejwt = async(req, res = response, next) => {
 
         
         //  Buscamos el usuario authenticado
-        const user = await User.findById(uid)
+        const usuario = await Usuario.findById(uid)
 
         //  Verificar que exista el usuario
-        if(!user){
+        if(!usuario){
             return res.status(401).json({
                 msg : 'Token no valido'
             })            
         }
 
         //  Verificar si el usuario esta activo/no activo
-        if(!user.estado){
+        if(!usuario.estado){
             return res.status(401).json({
                 msg : 'Token No valido'
             })
@@ -39,7 +39,7 @@ const validatejwt = async(req, res = response, next) => {
 
 
         //  Lo almacenamos en la request
-        req.user = user
+        req.usuario = usuario
 
         //  Si todo es correcto continue las validaciones check() -> check().....
         next();

@@ -4,8 +4,8 @@ const { response } = require('express')
 //  Encriptar Contraseña usamos paquete Bcrypt
 const bcryptjs = require('bcryptjs')
 
-//  Modelo de Esquema Mongose
-const User = require('../models/usuarioschema')
+//  Modelo de Esquema "USUARIO" Mongose
+const Usuario = require('../models/usuario')
 
 
 
@@ -16,16 +16,15 @@ const get = async(req, res = response) => {
 
     //  Devuelve un query
     const [Total, Usuarios] = await Promise.all([
-        User.countDocuments({estado : true}),
-        User.find({estado : true})
+        Usuario.countDocuments({estado : true}),
+        Usuario.find({estado : true})
             .skip(Number(since))
             .limit(Number(limit))
     ])
 
     res.json({
 
-        mensage : 'Peticion GET USANDO CONTROLADOR',
-        message : 'Request GET USING CONTROLLER',
+        msg: 'Controlador GET de Usuarios',
         Total,
         Usuarios
 
@@ -38,18 +37,20 @@ const post = async(req, res = response) => {
     const {name, email, password , rol} = req.body;
 
     //  Peticiones del Body se introduce al Modelo
-    const user = new User({name, email, password , rol});
+    const usuario = new Usuario({name, email, password , rol});
 
     //  Encriptar Contraseña Hash
     const salt = bcryptjs.genSaltSync()
-    user.password = bcryptjs.hashSync(password, salt)
+    usuario.password = bcryptjs.hashSync(password, salt)
 
     //  Salvar en Base de datos
-    await user.save();
+    await usuario.save();
 
     res.json({
-        message : 'Request POST USING CONTROLLER FOR USER CREATE STATUS 200',
-        user
+
+        message : ' Metodo Post para Creacion de Usuarios ',
+        usuario
+
     })
 
 }
@@ -70,35 +71,37 @@ const put = async(req, res = response) => {
     }
 
     //  Busca el ID y con los datos actualizalos
-    const user = await User.findByIdAndUpdate(id , resto)
+    const usuario = await Usuario.findByIdAndUpdate(id , resto)
 
     res.json({
-        mensage : 'Peticion PUT',
-        message : 'Request PUT USING CONTROLLER',
-        user
+
+        mensage : ' Actualizacion de Usuario ',
+        usuario
+
     })
 }
 
 const patch = (req, res = response) => {
+
     res.json({
         mensage : 'Peticion PATCH',
         message : 'Request PATCH USING CONTROLLER'
     })
+
 }
 
 const delet = async(req, res = response) => {
 
     const {id} = req.params
 
-    const user = await User.findByIdAndUpdate(id, {estado : false})
+    const usuario = await Usuario.findByIdAndUpdate(id, {estado : false})
 
-    //  Usuario Auntenticado
-    const userauth = req.user
+    //  Usuario Auntenticado -> Tiene todos los datos de Quien fue que hizo la Accion de Borrar
+    const userauth = req.usuario
 
     res.json({
-        mensage : 'Peticion DELETE',
-        message : 'Request DELETE USING CONTROLLER',
-        user
+        mensage : ' Borrar Usuario ',
+        usuario
     })
 }
 

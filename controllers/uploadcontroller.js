@@ -1,7 +1,7 @@
 const { response } = require("express");
 const { subirarchivo } = require("../helpers/subirarchivo");
-const User = require('../models/usuarioschema')
-const Producto = require('../models/productoschema')
+const User = require('../models/usuario')
+const Producto = require('../models/producto')
 const path = require('path')
 const fs = require('fs')
 

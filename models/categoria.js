@@ -18,10 +18,12 @@ const CategoriaSchema = Schema({
         default : true
     },
 
-    user : {
+    usuario : {
+        //  Referencia a un Objeto en otra coleccion
         type : Schema.Types.ObjectId,
         ref : 'Usuario',
-        required : [true, 'User is required']
+        required : true
+    
     }
 
 

@@ -19,7 +19,7 @@ const ProductoSchema = Schema({
         default : true
     },
 
-    user : {
+    usuario : {
 
         type : Schema.Types.ObjectId,
         ref : 'Usuario',
@@ -32,7 +32,7 @@ const ProductoSchema = Schema({
         default : 0
     },
 
-    category : {
+    categoria : {
 
         type : Schema.Types.ObjectId,
         ref : 'Categoria',
@@ -58,7 +58,7 @@ const ProductoSchema = Schema({
 
 //  No devolver nunca los siguientes objetos de la base de datos
 ProductoSchema.methods.toJSON = function(){
-    const {__v, estado ,  ... data} = this.toObject()
+    const {__v, estado,  ... data} = this.toObject()
   
     return data
 }
